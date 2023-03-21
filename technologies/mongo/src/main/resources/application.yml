@@ -1,0 +1,6 @@
+# connecting to localhost is default.
+
+#spring:
+#  data:
+#    mongodb:
+#      uri: mongodb://localhost:27017/test
