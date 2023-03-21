@@ -6,8 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-//참고 자료 1 > https://spring.io/guides/gs/accessing-data-mongodb/
-//참고 자료 2 > https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#data.nosql.mongodb
 @SpringBootApplication
 public class MongoApplication implements CommandLineRunner {
 	private final CustomerRepository customerRepository;
