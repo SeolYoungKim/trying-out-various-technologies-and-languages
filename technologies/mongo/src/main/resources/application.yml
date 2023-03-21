@@ -1,4 +1,4 @@
-# By default, the instance tries to connect to a MongoDB server at mongodb://localhost/test.
+# By default, the instance tries to connect to a MongoDB server at mongodb://localhost/test
 # Check "MongoProperties.java"
 
 #spring:
