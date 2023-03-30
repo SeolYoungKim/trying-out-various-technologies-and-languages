@@ -1,4 +1,4 @@
-package hello.jpa.domain;
+package hello.jpa.many_to_many.domain;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;

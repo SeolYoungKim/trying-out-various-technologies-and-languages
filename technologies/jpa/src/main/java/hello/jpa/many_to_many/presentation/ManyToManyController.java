@@ -1,17 +1,15 @@
-package hello.jpa.presentation;
+package hello.jpa.many_to_many.presentation;
 
-import hello.jpa.application.ProductService;
-import hello.jpa.domain.Author;
-import hello.jpa.domain.Product;
-import hello.jpa.domain.ProductAuthor;
+import hello.jpa.many_to_many.application.ProductService;
+import hello.jpa.many_to_many.domain.Author;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class HelloController {
+public class ManyToManyController {
     private final ProductService productService;
 
-    public HelloController(final ProductService productService) {
+    public ManyToManyController(final ProductService productService) {
         this.productService = productService;
     }
 
@@ -26,7 +24,7 @@ public class HelloController {
     }
 
     @GetMapping("/product-author")
-    public ProductAuthorDto getProductAuthor() {
-        return new ProductAuthorDto(productService.getFirstProductAuthor());
+    public AuthorIdAndNameDto getProductAuthor() {
+        return new AuthorIdAndNameDto(productService.getFirstProductAuthor());
     }
 }
