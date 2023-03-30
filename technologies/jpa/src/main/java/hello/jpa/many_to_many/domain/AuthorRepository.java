@@ -1,7 +1,5 @@
-package hello.jpa.domain;
+package hello.jpa.many_to_many.domain;
 
-import java.util.Optional;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {

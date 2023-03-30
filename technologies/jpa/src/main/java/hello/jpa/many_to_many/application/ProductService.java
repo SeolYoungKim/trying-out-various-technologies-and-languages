@@ -1,12 +1,12 @@
-package hello.jpa.application;
+package hello.jpa.many_to_many.application;
 
-import hello.jpa.domain.Author;
-import hello.jpa.domain.AuthorRepository;
-import hello.jpa.domain.AuthorType;
-import hello.jpa.domain.Product;
-import hello.jpa.domain.ProductAuthor;
-import hello.jpa.domain.ProductAuthorRepository;
-import hello.jpa.domain.ProductRepository;
+import hello.jpa.many_to_many.domain.Author;
+import hello.jpa.many_to_many.domain.AuthorRepository;
+import hello.jpa.many_to_many.domain.AuthorType;
+import hello.jpa.many_to_many.domain.Product;
+import hello.jpa.many_to_many.domain.ProductAuthor;
+import hello.jpa.many_to_many.domain.ProductAuthorRepository;
+import hello.jpa.many_to_many.domain.ProductRepository;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

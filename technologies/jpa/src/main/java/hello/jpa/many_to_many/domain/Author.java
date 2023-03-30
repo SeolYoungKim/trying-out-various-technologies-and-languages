@@ -1,4 +1,4 @@
-package hello.jpa.domain;
+package hello.jpa.many_to_many.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
