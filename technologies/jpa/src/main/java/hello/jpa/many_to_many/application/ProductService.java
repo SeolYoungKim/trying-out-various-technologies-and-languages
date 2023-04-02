@@ -45,7 +45,7 @@ public class ProductService {
         return productAuthor;
     }
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         final Product product1 = new Product("Product 1", "Description 1");
         final Product product2 = new Product("Product 2", "Description 2");
