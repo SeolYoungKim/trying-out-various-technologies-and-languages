@@ -1,7 +1,5 @@
 package hello.mongo;
 
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-
 import hello.mongo.relation.Book;
 import hello.mongo.relation.BookRepository;
 import hello.mongo.relation.Publisher;
@@ -11,8 +9,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Update;
 
 @SpringBootApplication
 public class MongoApplication {
@@ -47,14 +43,14 @@ public class MongoApplication {
 			System.out.println(findedPublisherId);
 
 			System.out.println("=====Publisher에 List<String>형태로 BookId를 저장=====");
-			publisher.addBook(book.getId());
-			publisher.addBook(book2.getId());
+			publisher.addBook(book);
+			publisher.addBook(book2);
 			publisherRepository.save(publisher);
 
 			final Publisher findedPublisher = publisherRepository.findById(publisher.getId())
 					.orElseThrow();
 
-			final List<String> books = findedPublisher.getBooksIds();
+			final List<Book> books = findedPublisher.getBooks();
 			System.out.println(books);
 			books.forEach(System.out::println);
 		};

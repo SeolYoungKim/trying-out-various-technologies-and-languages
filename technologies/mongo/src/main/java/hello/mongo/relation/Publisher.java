@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 @Getter
 @Document
@@ -19,7 +19,8 @@ public class Publisher {
 
     private int foundationYear;
 
-    List<String> booksIds = new ArrayList<>();
+    @DocumentReference
+    List<Book> books = new ArrayList<>();
 
     public Publisher(final String name, final String acronym, final int foundationYear) {
         this.name = name;
@@ -27,7 +28,7 @@ public class Publisher {
         this.foundationYear = foundationYear;
     }
 
-    public void addBook(final String bookId) {
-        booksIds.add(bookId);
+    public void addBook(final Book book) {
+        books.add(book);
     }
 }
