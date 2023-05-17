@@ -31,9 +31,11 @@ public class MongoApplication {
 
 			final Book book = new Book("123", "title", 100, publisher);
 			bookRepository.save(book);
+			System.out.println(book.getId() + "'s Publisher=" + publisher);
 
 			final Book book2 = new Book("456", "t", 1000, publisher);
 			bookRepository.save(book2);
+			System.out.println(book2.getId() + "'s Publisher=" + publisher);
 
 			System.out.println("=====Book에 PublisherId를 저장=====");
 			final Book findedBook = bookRepository.findById(book.getId()).orElseThrow();
@@ -43,10 +45,10 @@ public class MongoApplication {
 			System.out.println(findedBookPublisher);
 			System.out.println(findedBookPublisher.getId());
 
-			System.out.println("=====Publisher에 List<String>형태로 BookId를 저장=====");
-			publisher.addBook(book);
-			publisher.addBook(book2);
-			publisherRepository.save(publisher);
+			System.out.println("=====@ReadOnlyProperty와 @DocumentReference의 lookup 필드를 이용하면 따로 저장해주지 않아도 books에 book이 지정됨=====");
+//			publisher.addBook(book);
+//			publisher.addBook(book2);
+//			publisherRepository.save(publisher);
 
 			final Publisher findedPublisher = publisherRepository.findById(publisher.getId())
 					.orElseThrow();
