@@ -19,7 +19,7 @@ public class Publisher {
 
     private int foundationYear;
 
-    @DocumentReference
+    @DocumentReference(lazy = true)  // books 조회 시 proxy로 조회
     List<Book> books = new ArrayList<>();
 
     public Publisher(final String name, final String acronym, final int foundationYear) {

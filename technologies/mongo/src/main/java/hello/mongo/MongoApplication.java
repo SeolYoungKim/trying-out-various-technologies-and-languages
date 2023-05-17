@@ -52,8 +52,8 @@ public class MongoApplication {
 					.orElseThrow();
 
 			final List<Book> books = findedPublisher.getBooks();
-			System.out.println(books);
-			books.forEach(System.out::println);
+			System.out.println(books);  // 프록시
+			books.forEach(b -> System.out.println(b.getId()));  // 실제 객체
 		};
 	}
 
