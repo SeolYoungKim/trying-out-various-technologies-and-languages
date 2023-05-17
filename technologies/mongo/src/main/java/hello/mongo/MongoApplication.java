@@ -29,18 +29,19 @@ public class MongoApplication {
 
 			final Publisher publisher = publisherRepository.save(new Publisher("kim", "ss", 2023));
 
-			final Book book = new Book("123", "title", 100, publisher.getId());
+			final Book book = new Book("123", "title", 100, publisher);
 			bookRepository.save(book);
 
-			final Book book2 = new Book("456", "t", 1000, publisher.getId());
+			final Book book2 = new Book("456", "t", 1000, publisher);
 			bookRepository.save(book2);
 
 			System.out.println("=====Book에 PublisherId를 저장=====");
 			final Book findedBook = bookRepository.findById(book.getId()).orElseThrow();
-			final String findedPublisherId = findedBook.getPublisherId();
+			final Publisher findedBookPublisher = findedBook.getPublisher();
 
 			System.out.println(publisher.getId());
-			System.out.println(findedPublisherId);
+			System.out.println(findedBookPublisher);
+			System.out.println(findedBookPublisher.getId());
 
 			System.out.println("=====Publisher에 List<String>형태로 BookId를 저장=====");
 			publisher.addBook(book);
