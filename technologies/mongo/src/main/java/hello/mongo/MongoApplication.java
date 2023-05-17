@@ -1,5 +1,12 @@
 package hello.mongo;
 
+import hello.mongo.relation.Book;
+import hello.mongo.relation.BookRepository;
+import hello.mongo.relation.Publisher;
+import hello.mongo.relation.PublisherRepository;
+import java.util.List;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,33 +15,52 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootApplication
-public class MongoApplication implements CommandLineRunner {
-	private final CustomerRepository customerRepository;
+public class MongoApplication {
+	private final BookRepository bookRepository;
+	private final PublisherRepository publisherRepository;
 
-	public MongoApplication(final CustomerRepository customerRepository) {
-		this.customerRepository = customerRepository;
+	public MongoApplication(final BookRepository bookRepository,
+			final PublisherRepository publisherRepository) {
+		this.bookRepository = bookRepository;
+		this.publisherRepository = publisherRepository;
+	}
+
+	@Bean
+	public ApplicationRunner applicationRunner() {
+		return args -> {
+			publisherRepository.deleteAll();
+			bookRepository.deleteAll();
+
+			final Publisher publisher = publisherRepository.save(new Publisher("kim", "ss", 2023));
+
+			final Book book = new Book("123", "title", 100, publisher);
+			bookRepository.save(book);
+
+			final Book book2 = new Book("456", "t", 1000, publisher);
+			bookRepository.save(book2);
+
+			System.out.println("=====Book을 찾아오면 Publisher가 자동으로 할당됨=====");
+			final Book findedBook = bookRepository.findById(book.getId()).orElseThrow();
+			final Publisher findedBookPublisher = findedBook.getPublisher();
+
+			System.out.println(publisher.getId());
+			System.out.println(findedBookPublisher.getId());
+
+			System.out.println("=====@DbRef를 이용하면 List<Book>을 찾아올 수 있음=====");
+			publisher.addBook(book);
+			publisher.addBook(book2);
+			publisherRepository.save(publisher);
+
+			final Publisher findedPublisher = publisherRepository.findById(publisher.getId())
+					.orElseThrow();
+
+			final List<Book> books = findedPublisher.getBooks();
+			System.out.println(books);
+			books.forEach(b -> System.out.println(b.getId()));
+		};
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(MongoApplication.class, args);
-	}
-
-	@Override
-	public void run(final String... args) throws Exception {
-		customerRepository.deleteAll();
-
-		customerRepository.save(new Customer("Kim", "SeolYoung"));
-		customerRepository.save(new Customer("Park", "SeolYoung"));
-
-		System.out.println("Customers found with findAll():");
-		System.out.println("-------------------------------");
-		for (Customer customer : customerRepository.findAll()) {
-			System.out.println(customer);
-		}
-		System.out.println();
-
-		System.out.println("Customer found with findByFirstName('Kim'):");
-		System.out.println("--------------------------------");
-		System.out.println(customerRepository.findByFirstName("Kim"));
 	}
 }
