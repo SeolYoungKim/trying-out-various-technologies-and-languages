@@ -1,10 +1,11 @@
 package hello.mongo;
 
-import hello.mongo.relation.Book;
-import hello.mongo.relation.BookRepository;
-import hello.mongo.relation.Publisher;
-import hello.mongo.relation.PublisherRepository;
+import hello.mongo.relation2.Author;
+import hello.mongo.relation2.AuthorRepository;
+import hello.mongo.relation2.Product;
+import hello.mongo.relation2.ProductRepository;
 import java.util.List;
+import java.util.stream.IntStream;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,50 +13,41 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class MongoApplication {
-	private final BookRepository bookRepository;
-	private final PublisherRepository publisherRepository;
+	private final AuthorRepository authorRepository;
+	private final ProductRepository productRepository;
 
-	public MongoApplication(final BookRepository bookRepository,
-			final PublisherRepository publisherRepository) {
-		this.bookRepository = bookRepository;
-		this.publisherRepository = publisherRepository;
+	public MongoApplication(final AuthorRepository authorRepository,
+			final ProductRepository productRepository) {
+		this.authorRepository = authorRepository;
+		this.productRepository = productRepository;
 	}
 
 	@Bean
 	public ApplicationRunner applicationRunner() {
 		return args -> {
-			publisherRepository.deleteAll();
-			bookRepository.deleteAll();
+			productRepository.deleteAll();
+			authorRepository.deleteAll();
 
-			final Publisher publisher = publisherRepository.save(new Publisher("kim", "ss", 2023));
+			final Product product = productRepository.save(
+					new Product("title", "status", "ADULT_ONLY"));
 
-			final Book book = new Book("123", "title", 100, publisher);
-			bookRepository.save(book);
-			System.out.println(book.getId() + "'s Publisher=" + publisher);
+			final List<Author> painters = IntStream.rangeClosed(1, 10)
+					.mapToObj(i -> new Author("name" + i, "nickname" + i))
+					.toList();
 
-			final Book book2 = new Book("456", "t", 1000, publisher);
-			bookRepository.save(book2);
-			System.out.println(book2.getId() + "'s Publisher=" + publisher);
+			final List<Author> writers = IntStream.rangeClosed(11, 20)
+					.mapToObj(i -> new Author("name" + i, "nickname" + i))
+					.toList();
 
-			System.out.println("=====Book에 PublisherId를 저장=====");
-			final Book findedBook = bookRepository.findById(book.getId()).orElseThrow();
-			final Publisher findedBookPublisher = findedBook.getPublisher();
+			authorRepository.saveAll(painters);
+			authorRepository.saveAll(writers);
 
-			System.out.println(publisher.getId());
-			System.out.println(findedBookPublisher);
-			System.out.println(findedBookPublisher.getId());
+			product.addPainters(painters);
+			product.addWriters(writers);
+			productRepository.save(product);
 
-			System.out.println("=====@ReadOnlyProperty와 @DocumentReference의 lookup 필드를 이용하면 따로 저장해주지 않아도 books에 book이 지정됨=====");
-//			publisher.addBook(book);
-//			publisher.addBook(book2);
-//			publisherRepository.save(publisher);
-
-			final Publisher findedPublisher = publisherRepository.findById(publisher.getId())
-					.orElseThrow();
-
-			final List<Book> books = findedPublisher.getBooks();
-			System.out.println(books);  // 프록시
-			books.forEach(b -> System.out.println(b.getId()));  // 실제 객체
+			final Product findProduct = productRepository.findById(product.getId()).orElseThrow();
+			findProduct.getPainters().forEach(System.out::println);
 		};
 	}
 
