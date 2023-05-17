@@ -16,12 +16,12 @@ public class Book {
 
     private int pages;
 
-    private Publisher publisher;
+    private String publisherId;
 
-    public Book(final String isbn, final String title, final int pages, final Publisher publisher) {
+    public Book(final String isbn, final String title, final int pages, final String publisherId) {
         this.isbn = isbn;
         this.title = title;
         this.pages = pages;
-        this.publisher = publisher;
+        this.publisherId = publisherId;
     }
 }

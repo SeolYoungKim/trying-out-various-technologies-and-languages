@@ -19,8 +19,7 @@ public class Publisher {
 
     private int foundationYear;
 
-    @DBRef
-    List<Book> books = new ArrayList<>();
+    List<String> booksIds = new ArrayList<>();
 
     public Publisher(final String name, final String acronym, final int foundationYear) {
         this.name = name;
@@ -28,7 +27,7 @@ public class Publisher {
         this.foundationYear = foundationYear;
     }
 
-    public void addBook(final Book book) {
-        books.add(book);
+    public void addBook(final String bookId) {
+        booksIds.add(bookId);
     }
 }

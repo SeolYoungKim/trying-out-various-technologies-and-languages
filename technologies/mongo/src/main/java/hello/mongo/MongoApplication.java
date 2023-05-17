@@ -1,18 +1,18 @@
 package hello.mongo;
 
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+
 import hello.mongo.relation.Book;
 import hello.mongo.relation.BookRepository;
 import hello.mongo.relation.Publisher;
 import hello.mongo.relation.PublisherRepository;
 import java.util.List;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Update;
 
 @SpringBootApplication
 public class MongoApplication {
@@ -33,30 +33,30 @@ public class MongoApplication {
 
 			final Publisher publisher = publisherRepository.save(new Publisher("kim", "ss", 2023));
 
-			final Book book = new Book("123", "title", 100, publisher);
+			final Book book = new Book("123", "title", 100, publisher.getId());
 			bookRepository.save(book);
 
-			final Book book2 = new Book("456", "t", 1000, publisher);
+			final Book book2 = new Book("456", "t", 1000, publisher.getId());
 			bookRepository.save(book2);
 
-			System.out.println("=====Book을 찾아오면 Publisher가 자동으로 할당됨=====");
+			System.out.println("=====Book에 PublisherId를 저장=====");
 			final Book findedBook = bookRepository.findById(book.getId()).orElseThrow();
-			final Publisher findedBookPublisher = findedBook.getPublisher();
+			final String findedPublisherId = findedBook.getPublisherId();
 
 			System.out.println(publisher.getId());
-			System.out.println(findedBookPublisher.getId());
+			System.out.println(findedPublisherId);
 
-			System.out.println("=====@DbRef를 이용하면 List<Book>을 찾아올 수 있음=====");
-			publisher.addBook(book);
-			publisher.addBook(book2);
+			System.out.println("=====Publisher에 List<String>형태로 BookId를 저장=====");
+			publisher.addBook(book.getId());
+			publisher.addBook(book2.getId());
 			publisherRepository.save(publisher);
 
 			final Publisher findedPublisher = publisherRepository.findById(publisher.getId())
 					.orElseThrow();
 
-			final List<Book> books = findedPublisher.getBooks();
+			final List<String> books = findedPublisher.getBooksIds();
 			System.out.println(books);
-			books.forEach(b -> System.out.println(b.getId()));
+			books.forEach(System.out::println);
 		};
 	}
 
