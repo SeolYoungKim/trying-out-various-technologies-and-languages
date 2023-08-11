@@ -1,7 +1,9 @@
 package hello.jpa.relation;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class Member {
     @Id
@@ -10,17 +12,10 @@ public class Member {
 
     private String username;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id")
-    private Team team;
-
     protected Member() {
     }
 
-    public Member(String username, Team team) {
+    public Member(String username) {
         this.username = username;
-        this.team = team;
-
-        team.addMember(this);
     }
 }
