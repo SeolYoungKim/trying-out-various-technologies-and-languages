@@ -20,9 +20,9 @@ public class ManyToManyTest {
         Product product = new Product("product");
         em.persist(product);
 
-        MemberProduct memberProduct = new MemberProduct(member, product);
-        memberProduct.setOrderAmount(2);
-        em.persist(memberProduct);
+        Order order = new Order(member, product);
+        order.setOrderAmount(2);
+        em.persist(order);
 
         em.flush();
     }
@@ -37,20 +37,19 @@ public class ManyToManyTest {
         Product product = new Product("product");
         em.persist(product);
 
-        MemberProduct memberProduct = new MemberProduct(member, product);
-        memberProduct.setOrderAmount(2);
-        em.persist(memberProduct);
+        Order order = new Order(member, product);
+        order.setOrderAmount(2);
+        em.persist(order);
 
         em.flush();
         em.clear();
 
-        MemberProduct.MemberProductId memberProductId = new MemberProduct.MemberProductId(member.getId(), product.getId());
-        MemberProduct findMemberProduct = em.find(MemberProduct.class, memberProductId);
-        Member findMember = findMemberProduct.getMember();
-        Product findProduct = findMemberProduct.getProduct();
+        Order findOrder = em.find(Order.class, order.getId());
+        Member findMember = findOrder.getMember();
+        Product findProduct = findOrder.getProduct();
 
         System.out.println(findMember.getUsername());
         System.out.println(findProduct.getName());
-        System.out.println(findMemberProduct.getOrderAmount());
+        System.out.println(findOrder.getOrderAmount());
     }
 }
