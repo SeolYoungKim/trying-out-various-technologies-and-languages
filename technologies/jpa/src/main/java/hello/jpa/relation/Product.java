@@ -1,10 +1,10 @@
 package hello.jpa.relation;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity(name = "product2")
@@ -15,10 +15,17 @@ public class Product {
 
     private String name;
 
+    @ManyToMany(mappedBy = "products")
+    private List<Member> members = new ArrayList<>();
+
     protected Product() {
     }
 
     public Product(String name) {
         this.name = name;
+    }
+
+    public void addMember(Member member) {
+        members.add(member);
     }
 }
