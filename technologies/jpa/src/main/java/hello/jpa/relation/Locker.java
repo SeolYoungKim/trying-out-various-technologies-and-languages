@@ -1,9 +1,6 @@
 package hello.jpa.relation;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
@@ -14,6 +11,9 @@ public class Locker {
     private Long id;
 
     private String name;
+
+    @OneToOne(mappedBy = "locker")
+    private Member member;
 
     protected Locker() {
     }
