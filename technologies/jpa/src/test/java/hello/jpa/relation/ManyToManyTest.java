@@ -14,59 +14,43 @@ public class ManyToManyTest {
     @Transactional
     @Test
     void test1() {
-        Product product = new Product("product1");
+        Member member = new Member("member");
+        em.persist(member);
+
+        Product product = new Product("product");
         em.persist(product);
 
-        Member member = new Member("member");
-        member.addProduct(product);
-        em.persist(member);
+        MemberProduct memberProduct = new MemberProduct(member, product);
+        memberProduct.setOrderAmount(2);
+        em.persist(memberProduct);
 
         em.flush();
     }
+
 
     @Transactional
     @Test
     void test2() {
-        Product product = new Product("product1");
+        Member member = new Member("member");
+        em.persist(member);
+
+        Product product = new Product("product");
         em.persist(product);
 
-        Member member = new Member("member");
-        member.addProduct(product);
-        em.persist(member);
+        MemberProduct memberProduct = new MemberProduct(member, product);
+        memberProduct.setOrderAmount(2);
+        em.persist(memberProduct);
 
         em.flush();
         em.clear();
 
-        Member findMember = em.find(Member.class, member.getId());
+        MemberProduct.MemberProductId memberProductId = new MemberProduct.MemberProductId(member.getId(), product.getId());
+        MemberProduct findMemberProduct = em.find(MemberProduct.class, memberProductId);
+        Member findMember = findMemberProduct.getMember();
+        Product findProduct = findMemberProduct.getProduct();
 
-        findMember.getProducts().forEach(
-                p -> System.out.println(p.getName())
-        );
-    }
-
-    @Transactional
-    @Test
-    void test3() {
-        Product product = new Product("product1");
-        em.persist(product);
-
-        Member member = new Member("member");
-        member.addProduct(product);
-        em.persist(member);
-
-        em.flush();
-        em.clear();
-
-        System.out.println("=================findMember=================");
-        Member findMember = em.find(Member.class, member.getId());
-        findMember.getProducts().forEach(
-                p -> System.out.println(p.getName())
-        );
-
-        System.out.println("=================findProduct=================");
-        Product findProduct = em.find(Product.class, product.getId());
-        findProduct.getMembers().forEach(
-                m -> System.out.println(m.getUsername())
-        );
+        System.out.println(findMember.getUsername());
+        System.out.println(findProduct.getName());
+        System.out.println(findMemberProduct.getOrderAmount());
     }
 }

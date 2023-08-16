@@ -22,23 +22,13 @@ public class Member {
     @OneToOne(mappedBy = "member")
     private Locker locker;
 
-    @ManyToMany
-    @JoinTable(
-            name = "member_product",
-            joinColumns = @JoinColumn(name = "member_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
 
     protected Member() {
     }
 
     public Member(String username) {
         this.username = username;
-    }
-
-    public void addProduct(Product product) {
-        products.add(product);
-        product.addMember(this);
     }
 }

@@ -15,17 +15,10 @@ public class Product {
 
     private String name;
 
-    @ManyToMany(mappedBy = "products")
-    private List<Member> members = new ArrayList<>();
-
     protected Product() {
     }
 
     public Product(String name) {
         this.name = name;
-    }
-
-    public void addMember(Member member) {
-        members.add(member);
     }
 }
