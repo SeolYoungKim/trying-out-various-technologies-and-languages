@@ -16,6 +16,10 @@ public class Member {
     @JoinColumn(name = "team_id", insertable = false, updatable = false)
     private Team team;
 
+    @OneToOne
+    @JoinColumn(name = "locker_id", unique = true)
+    private Locker locker;
+
     protected Member() {
     }
 
