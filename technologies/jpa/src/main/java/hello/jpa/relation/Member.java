@@ -12,6 +12,10 @@ public class Member {
 
     private String username;
 
+    @ManyToOne
+    @JoinColumn(name = "team_id", insertable = false, updatable = false)
+    private Team team;
+
     protected Member() {
     }
 
