@@ -75,5 +75,8 @@ public class ProxyTest {
         Member findMember = em.find(Member.class, 1L);
         List<Order> orders = findMember.getOrders();
         System.out.println("타입=" + orders.getClass().getName());
+
+        System.out.println("======================초기화======================");
+        orders.get(0);
     }
 }
