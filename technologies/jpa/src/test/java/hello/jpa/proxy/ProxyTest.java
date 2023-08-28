@@ -1,18 +1,24 @@
 package hello.jpa.proxy;
 
 import hello.jpa.relation.Member;
+import hello.jpa.relation.Order;
+import hello.jpa.relation.Product;
 import hello.jpa.relation.Team;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceUnitUtil;
 import org.assertj.core.api.Assertions;
+import org.hibernate.collection.spi.PersistentBag;
 import org.hibernate.proxy.HibernateProxy;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -46,5 +52,28 @@ public class ProxyTest {
 
         Member reference = em.getReference(Member.class, 1L);
         System.out.println("타입=" + reference.getClass());
+    }
+
+    @Transactional
+    @Test
+    void 프록시와_컬렉션_래퍼() {
+        Member member = new Member("name");
+        em.persist(member);
+
+        Product product = new Product("product");
+        em.persist(product);
+
+        Order order = new Order(member, product);
+        em.persist(order);
+
+        member.setOrders(List.of(order));
+
+        em.flush();
+        em.clear();
+
+        System.out.println("======================컬렉션 래퍼 조회======================");
+        Member findMember = em.find(Member.class, 1L);
+        List<Order> orders = findMember.getOrders();
+        System.out.println("타입=" + orders.getClass().getName());
     }
 }
