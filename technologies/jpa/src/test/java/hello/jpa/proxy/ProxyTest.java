@@ -3,7 +3,9 @@ package hello.jpa.proxy;
 import hello.jpa.relation.Member;
 import hello.jpa.relation.Team;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceUnitUtil;
 import org.assertj.core.api.Assertions;
 import org.hibernate.proxy.HibernateProxy;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,9 @@ public class ProxyTest {
         Member reference = em.getReference(Member.class, 1L);
         System.out.println("타입=" + reference.getClass());
         System.out.println("Id=" + reference.getId());
+
+        EntityManagerFactory emf = em.getEntityManagerFactory();
+        assertThat(emf.getPersistenceUnitUtil().isLoaded(reference)).isFalse();
     }
 
     @Transactional
