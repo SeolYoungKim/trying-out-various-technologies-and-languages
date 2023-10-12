@@ -1,5 +1,6 @@
 package hello.jpa.entitymanager;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 public class EmTest {
@@ -28,5 +31,7 @@ public class EmTest {
 
         countDownLatch.await();
         executorService.shutdown();
+
+        assertThat(testRepository.getCalledEntityManagerSet()).hasSize(50);
     }
 }
