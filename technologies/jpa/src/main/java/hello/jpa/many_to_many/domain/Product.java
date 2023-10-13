@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import lombok.Getter;
 
 @Getter
@@ -32,9 +34,26 @@ public class Product {
     protected Product() {
     }
 
+    public Product(Long id) {
+        this.id = id;
+    }
+
     public Product(final String name, final String description) {
         this.name = name;
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product product)) return false;
+
+        return Objects.equals(id, product.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     // ManyToMany 관련 코드
