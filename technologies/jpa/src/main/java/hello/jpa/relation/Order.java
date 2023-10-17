@@ -3,9 +3,6 @@ package hello.jpa.relation;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 @Getter
 @Entity(name = "orders")
 public class Order {
@@ -24,6 +21,10 @@ public class Order {
     private int orderAmount;
 
     protected Order() {
+    }
+
+    public Order(Member member) {
+        this.member = member;
     }
 
     public Order(Member member, Product product) {
