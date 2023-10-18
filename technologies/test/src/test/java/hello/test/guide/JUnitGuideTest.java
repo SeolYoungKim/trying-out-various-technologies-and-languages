@@ -2,134 +2,85 @@ package hello.test.guide;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
 
 /**
- * JUnit5의 전반적인 사용 방법에 대한 테스트 코드 입니다.
- * <br/>
- * 더 많은 내용은
- * <a href="https://junit.org/junit5/docs/current/user-guide/#overview">JUnit5 공식문서</a>를 참고하세요.
+ * ParameterizedTest, RepeatedTest 등에 대한 작성 방법입니다.
  */
 public class JUnitGuideTest {
-    @BeforeAll
-    static void beforeAll() {
-        /*
-         * Test Data를 모두 삭제하는 데 사용하기 용이합니다.
-         */
-        System.out.println("[BeforeAll] 테스트 클래스의 메서드가 실행되기 전에 1회 실행");
-        System.out.println("=====================================================");
-    }
-
-    @AfterAll
-    static void afterAll() {
-        /*
-         * Test Data를 모두 삭제하는 데 사용하기 용이합니다.
-         * - 하지만, 보통은 실행 전에 삭제하는 것이 선호됩니다. 실행 후 삭제는 다른 테스트가 실행될 때 영향을 줄 수도 있어서 찝찝하다는 게 보통의 이유더라구요.😅
-         */
-        System.out.println("=====================================================");
-        System.out.println("[AfterAll] 테스트 클래스의 모든 테스트가 끝난 후 1회 실행");
-    }
-
-    @BeforeEach
-    void setUp() {
-        /*
-         * 공통적인 세팅에 주로 사용됩니다.
-         * ex: port 세팅
-         */
-        System.out.println("[BeforeEach] 테스트 메서드 실행 전 1회 실행");
-    }
-
-    @AfterEach
-    void tearDown() {
-        /*
-         * 어디에 쓸 수 있을지는 아직 생각 안해봤습니다. 알게되면 추가를..
-         */
-        System.out.println("[AfterEach] 테스트 메서드 실행 후 1회 실행");
-    }
-
-    @DisplayName("Boolean 검증 테스트")
-    @Test
-    void test() {
-        assertThat(1 == 1).isTrue();
-        assertThat(1 != 1).isFalse();
-    }
-
-    @DisplayName("값 검증 테스트")
+    @DisplayName("@ParameterizedTest 사용 방법")
     @Nested
-    class ValueTest {
-        @DisplayName("숫자 검증")
-        @Test
-        void test() {
-            int x = 1;
-            int y = 2;
-
-            assertThat(x + y).isEqualTo(3);  // 동등성 (equalTo)
-            assertThat(x + y).isSameAs(3);   // 동일성 (==)
+    class ParameterizedTestExample {
+        @DisplayName("String에 대해 테스트합니다.")
+        @ParameterizedTest(name = "value={arguments}")
+        @ValueSource(strings = {"a", "b", "c"})
+            // 이 외에도, 여러 타입의 값들이 올 수 있습니다.
+        void test1(String value) {
+            System.out.println(value);
         }
 
-        @DisplayName("문자열 검증")
-        @Test
-        void test2() {
-            String str = "abcabc";
-
-            assertThat(str).isNotBlank();
-            assertThat(str).isAlphabetic();
-            assertThat(str).contains("ab");
-            assertThat(str).containsOnlyOnce("ca");
-            assertThat(str).startsWith("ab");
+        @DisplayName("EnumSource에 대해 테스트합니다.")
+        @ParameterizedTest(name = "value={arguments}")
+        @EnumSource(OrderStatus.class)
+        void test2(OrderStatus orderStatus) {
+            System.out.println(orderStatus);
         }
 
-        @DisplayName("객체 검증")
-        @Test
-        void test3() {
-            Car 벤츠1 = new Car("벤츠");
-            Car 벤츠2 = new Car("벤츠");
+        @DisplayName("CsvSource에 대해 테스트합니다. type=String")
+        @ParameterizedTest(name = "value={arguments}")
+        @CsvSource(value = {"a,b", "c,d", "e,f"})
+        void test3(String first, String second) {
+            System.out.println("first = " + first);
+            System.out.println("second = " + second);
+        }
 
-            assertThat(벤츠1).isEqualTo(벤츠2);
-            assertThat(벤츠1).isNotSameAs(벤츠2);
+        @DisplayName("CsvSource에 대해 테스트합니다. type=int")
+        @ParameterizedTest(name = "value={arguments}")
+        @CsvSource(value = {"1,2", "3,4", "5,6"})
+        void test4(int first, int second) {
+            System.out.println("first = " + first);
+            System.out.println("second = " + second);
+        }
+
+        @DisplayName("CsvSource에 대해 테스트합니다. type=enum")
+        @ParameterizedTest(name = "value={arguments}")
+        @CsvSource(value = {"ORDER,CANCEL", "SHIPPING,DELIVERY_COMPLETED"})
+        void test5(OrderStatus first, OrderStatus second) {
+            System.out.println("first = " + first);
+            System.out.println("second = " + second);
+        }
+
+        @DisplayName("MethodSource에 대해 테스트합니다.")
+        @ParameterizedTest(name = "value={arguments}")
+        @MethodSource("generateValues")
+        void test6(String first, OrderStatus second) {
+            System.out.println(first + " = " + second);
+        }
+
+        static Stream<Arguments> generateValues() {
+            return Stream.of(
+                    Arguments.of("order", OrderStatus.ORDER),
+                    Arguments.of("cancel", OrderStatus.CANCEL),
+                    Arguments.of("shipping", OrderStatus.SHIPPING),
+                    Arguments.of("delivery_completed", OrderStatus.DELIVERY_COMPLETED)
+            );
         }
     }
 
-
-
-    @DisplayName("Collections 검증 테스트")
-    @Test
-    void test3() {
-        List<Integer> numbers = List.of(1, 2, 3);
-
-        assertThat(numbers).hasSize(3);
-        assertThat(numbers).containsExactly(1, 2, 3);  // 들어있는 순서도 정확히 지켜져야 합니다.
-        assertThat(numbers).containsOnly(1, 3, 2);  // 들어있는 순서는 상관 없습니다.
-    }
-
-    @DisplayName("Map 검증 테스트")
-    @Test
-    void test4() {
-        Map<String, String> map = Map.of("key1", "val1",
-                "key2", "val2",
-                "key3", "val3"
-        );
-
-        assertThat(map).hasSize(3);
-        assertThat(map).containsOnly(entry("key1", "val1"), entry("key2", "val2"), entry("key3", "val3"));  // HashMap은 순서를 보장하지 않으므로, containsExactly에 대한 테스트는 작성하지 않았습니다.
-        assertThat(map).containsKey("key1");
-        assertThat(map).containsKeys("key1", "key2");
-        assertThat(map).containsOnlyKeys("key1", "key2", "key3");
-    }
-
-    @DisplayName("예외 검증 테스트")
-    @Test
-    void test5() {
-        assertThatThrownBy(this::throwRuntimeException)
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("런타임 예외 발생!");
-    }
-
-    void throwRuntimeException() {
-        throw new RuntimeException("런타임 예외 발생!");
+    @DisplayName("@RepeatedTest 사용 방법")
+    @Nested
+    class RepeatedTestExample {
+        @DisplayName("반복 테스트를 수행합니다.")
+        @RepeatedTest(value = 3, name = "currentRepetition={currentRepetition} totalRepetitions={totalRepetitions}")
+        void test1() {
+            System.out.println("test1");
+        }
     }
 }
