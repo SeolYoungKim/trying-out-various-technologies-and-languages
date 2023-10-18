@@ -1,4 +1,4 @@
-# 테스트를 학습 해보자! 
+# 테스트
 ## 테스트 코드를 작성해야 하는 이유 
 - 우리가 작성한 코드가 제대로 동작하는지 알기 위함 
 - 테스트 자동화를 통해 CI/CD 프로세스를 만들 수 있음 
@@ -71,3 +71,92 @@
   - Spy
     - 메소드 호출을 전부 기록했다가, 나중에 확인하기 위한 객체 
 
+
+## Junit5
+### Architecture
+- 3개의 모듈로 구성되어 있음 
+  - Junit Platform
+    - JVM에서 테스트 프레임워크를 사용하기 위한 기반 역할 
+    - 콘솔, IDE, 빌드 tool에서 테스트를 시작하기 위한 API를 제공 
+  - Junit Jupiter
+    - Junit5의 주요 모듈
+    - Junit5의 테스트를 작성할 수 있는 API를 제공한다.
+  - Junit Vintage
+    - Junit3, Junit4를 지원하여, 이전 버전과의 호환성을 보장 
+
+```mermaid
+flowchart TD
+    subgraph Junit5
+        JunitVintage
+        JunitJupiter
+        JunitPlatform
+    end
+    OldTest((OldTest)) --> JunitVintage
+    NewTest((NewTest)) --> JunitJupiter
+    AnotherTest((AnotherTest)) --> ThirdParty
+
+    JunitVintage --> JunitPlatform
+    JunitJupiter --> JunitPlatform
+    ThirdParty --> JunitPlatform
+    
+    IDEs/BuildTools((IDEs/BuildTools)) --> JunitPlatform
+```
+
+![img.png](img.png)
+- Junit5를 사용하게 되면...
+  - 우리의 테스트는 `junit-jupiter-api`라는 인터페이스를 사용한다.
+  - `junit-jupiter-engine`은 `junit-jupiter-api`를 사용한다.
+  - `junit-jupiter-engine`은 `junit-platform-engine`이라는 인터페이스를 구현하고 있다.
+  - 대략 이런 그림이 아닐까...
+    ```java
+    interface JUnitJupiterApi {}
+    
+    interface JUnitJupiterEngine implements JUnitPlatformEngine {
+        JUnitJupiterApi api;
+    }
+    ```
+    
+- IDEs/BuildTools는 `junit-platform-launcher`라는 인터페이스를 사용한다.
+
+### 대략적인 동작 방식
+- JUnit5는 테스트를 실행할 때마다 새로운 객체를 생성하고 테스트를 실행한다. 
+```java
+public class JUnitTest {
+    static Set<JUnitTest> testObjects = new HashSet<>();
+
+    @Test
+    void objTest1() {
+        assertThat(testObjects).doesNotContain(this);
+        testObjects.add(this);
+
+        System.out.println("[Test1] testObjects = " + testObjects);
+    }
+
+    @Test
+    void objTest2() {
+        assertThat(testObjects).doesNotContain(this);
+        testObjects.add(this);
+
+        System.out.println("[Test2] testObjects = " + testObjects);
+    }
+
+    @Test
+    void objTest3() {
+        assertThat(testObjects).doesNotContain(this);
+        testObjects.add(this);
+
+        System.out.println("[Test3] testObjects = " + testObjects);
+    }
+}
+```
+
+```text
+// 결과
+[Test1] testObjects = [hello.test.junit.JUnitTest@13df2a8c]
+[Test2] testObjects = [hello.test.junit.JUnitTest@13df2a8c, hello.test.junit.JUnitTest@13bc8645]
+[Test3] testObjects = [hello.test.junit.JUnitTest@24c22fe, hello.test.junit.JUnitTest@13df2a8c, hello.test.junit.JUnitTest@13bc8645]
+```
+
+
+## 참고 자료
+- [JUnit5 Architecture](https://freecontent.manning.com/junit-5-architecture/)
