@@ -73,4 +73,14 @@ public class JUnitGuideTest {
             );
         }
     }
+
+    @DisplayName("@RepeatedTest 사용 방법")
+    @Nested
+    class RepeatedTestExample {
+        @DisplayName("반복 테스트를 수행합니다.")
+        @RepeatedTest(value = 3, name = "currentRepetition={currentRepetition} totalRepetitions={totalRepetitions}")
+        void test1() {
+            System.out.println("test1");
+        }
+    }
 }
