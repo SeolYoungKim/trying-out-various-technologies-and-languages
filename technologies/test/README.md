@@ -119,7 +119,8 @@ flowchart TD
 - IDEs/BuildTools는 `junit-platform-launcher`라는 인터페이스를 사용한다.
 
 ### 대략적인 동작 방식
-- JUnit5는 테스트를 실행할 때마다 새로운 객체를 생성하고 테스트를 실행한다. 
+- JUnit5는 테스트 메소드를 실행할 때마다 새로운 객체를 생성한 후 실행한다. 
+  - [공식문서 - testLifeCycle](https://junit.org/junit5/docs/current/user-guide/#writing-tests-test-instance-lifecycle)
 ```java
 public class JUnitTest {
     static Set<JUnitTest> testObjects = new HashSet<>();
