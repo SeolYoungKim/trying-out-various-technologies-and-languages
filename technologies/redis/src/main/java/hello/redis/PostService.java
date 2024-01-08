@@ -27,4 +27,8 @@ public class PostService {
 
         return post;
     }
+
+    @CacheEvict(cacheNames = "Post", key = "'all'", cacheManager = "defaultCacheManager")
+    public void evictPostCaches() {
+    }
 }
