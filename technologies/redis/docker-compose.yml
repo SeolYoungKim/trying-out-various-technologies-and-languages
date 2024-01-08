@@ -1,0 +1,18 @@
+version: "3.9"
+services:
+# mssql configuration
+  mssql:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password123
+      - MSSQL_COLLATION=Korean_Wansung_CI_AS
+    ports:
+      - "1433:1433"
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
