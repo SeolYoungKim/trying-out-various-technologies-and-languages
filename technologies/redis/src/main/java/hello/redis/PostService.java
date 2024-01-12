@@ -1,5 +1,6 @@
 package hello.redis;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,7 +17,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "Post", key = "'all'", cacheManager = "defaultCacheManager")
-    public List<Post> getPosts() {
+    public List<Post> getPosts(LocalDateTime localDateTime) {
         return postRepository.findAll();
     }
 

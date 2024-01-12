@@ -1,5 +1,6 @@
 package hello.redis;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +19,7 @@ public class PostController {
 
     @GetMapping("/posts")
     public List<Post> post() {
-        return postService.getPosts();
+        return postService.getPosts(LocalDateTime.now());
     }
 
     @PutMapping("/posts/{id}")

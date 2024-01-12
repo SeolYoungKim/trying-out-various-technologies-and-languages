@@ -18,7 +18,7 @@ public class DataInjection {
      */
     @PostConstruct
     private void init() {
-        int postNumber = 5000;
+        int postNumber = 100;
         List<Post> posts = IntStream.rangeClosed(1, postNumber)
                 .mapToObj(i -> new Post("title" + i, "content" + i))
                 .toList();

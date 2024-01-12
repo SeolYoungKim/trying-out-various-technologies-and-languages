@@ -1,10 +1,11 @@
 package hello.redis;
 
-import static jakarta.persistence.GenerationType.*;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ public class Post {
     private Long id;
     private String title;
     private String content;
+    private LocalDateTime registeredAt;
 
     protected Post() {
     }
@@ -24,5 +26,6 @@ public class Post {
     public Post(String title, String content) {
         this.title = title;
         this.content = content;
+        this.registeredAt = LocalDateTime.now();
     }
 }
