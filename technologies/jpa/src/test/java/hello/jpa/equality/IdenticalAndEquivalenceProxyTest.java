@@ -4,20 +4,13 @@ import hello.jpa.many_to_many.domain.Author;
 import hello.jpa.many_to_many.domain.AuthorRepository;
 import hello.jpa.many_to_many.domain.Product;
 import jakarta.persistence.EntityManager;
-import jakarta.servlet.http.Cookie;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.servlet.server.Session;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
