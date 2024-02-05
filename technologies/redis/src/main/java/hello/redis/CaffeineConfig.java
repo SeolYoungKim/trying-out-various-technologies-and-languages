@@ -18,7 +18,7 @@ public class CaffeineConfig {
         CaffeineCache caffeineCache = new CaffeineCache(
                 "Post",
                 Caffeine.newBuilder()
-                        .expireAfterWrite(10, TimeUnit.SECONDS)
+                        .expireAfterWrite(10, TimeUnit.MINUTES)
                         .build()
         );
         SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
