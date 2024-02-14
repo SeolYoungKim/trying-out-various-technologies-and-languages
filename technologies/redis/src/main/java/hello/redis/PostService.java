@@ -5,11 +5,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +24,12 @@ public class PostService {
 
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = "Post", key = "'all'", cacheManager = "defaultCacheManager")
-    public List<Post> getPosts(LocalDateTime localDateTime) {
-        return postRepository.findAll();
+    public List<Post> getPosts(LocalDateTime localDateTime) throws InterruptedException {
+        log.info("[{}] getPosts 호출", Thread.currentThread().getName());
+        List<Post> result = postRepository.findAll();  // 쿼리
+        Thread.sleep(4000);
+        log.info("[{}] query 결과 획득", Thread.currentThread().getName());
+        return result;
     }
 
     @Cacheable(cacheNames = "Post", key = "#id.toString() + #isAdult", cacheManager = "defaultCacheManager")
@@ -52,16 +54,5 @@ public class PostService {
         IntStream.rangeClosed(1, 50)
                 .mapToObj(i -> new Post("title" + i, "content" + i))
                 .forEach(postRepository::save);
-    }
-
-    @Scheduled(fixedDelay = 5000)
-    public void evictAllCachesAtIntervals() {
-        Cache cache = cacheManager.getCache("Post");
-        if (cache != null) {
-            for (int i = 0; i < 50; i++) {
-                Post post = cache.get(i + "true", Post.class);
-                log.info("id:{}, cachedPost: {}", i, post);
-            }
-        }
     }
 }
