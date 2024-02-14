@@ -19,7 +19,7 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<Post> post() {
+    public List<Post> post() throws InterruptedException {
         return postService.getPosts(LocalDateTime.now());
     }
 
